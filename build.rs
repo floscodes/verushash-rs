@@ -8,15 +8,11 @@ fn main() {
         .include("native/crypto");
 
     if target_arch == "x86_64" {
-        println!("cargo:warning=Building x86_64 (SIMD / Original VerusHash)");
         build.files([
             "native/crypto/verus_hash.cpp",
             "native/crypto/verus_clhash.cpp",
             "native/crypto/haraka.c",
         ]);
-    } else if target_arch == "aarch64" {
-        println!("cargo:warning=Building ARM64 CPU-only (Produktiv, korrekt)");
-        build.files(["native/crypto/verus_hash_cpu.cpp"]);
     } else {
         panic!("Unsupported architecture: {}", target_arch);
     }
