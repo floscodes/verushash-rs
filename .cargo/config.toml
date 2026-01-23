@@ -2,9 +2,3 @@
 # Gilt für alle Builds in diesem Projekt
 rustflags = ["-C", "target-cpu=native"]
 
-[profile.release]
-# Zusätzliche Mining-Performance:
-opt-level = 3
-lto = true          # Link Time Optimization für maximale Geschwindigkeit
-codegen-units = 1   # Langsameres Kompilieren, aber schnellerer Code
-panic = "abort"     # Spart Binärgröße und etwas Performance

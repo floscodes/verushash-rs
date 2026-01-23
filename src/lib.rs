@@ -18,8 +18,15 @@ pub fn verus_hash_v2(data: &[u8]) -> [u8; 32] {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
+
+    #[test]
+    fn test_hashes() {
+        let data = b"hello world";
+        let h1 = verus_hash(data);
+        let h2 = verus_hash_v2(data);
+        assert_ne!(h1, h2); // v1 und v2 sollten unterschiedlich sein
+    }
 
     #[test]
     fn test_verus_block_3911208() {
@@ -41,7 +48,7 @@ mod tests {
         let expected_hash_hex = "0000000000005f1a85389d4671aae324ab32757dc1b537160e74c015a3571599";
 
         // Berechnung
-        let mut result = verus_hash(&header_bytes);
+        let mut result = verus_hash_v2(&header_bytes);
 
         // WICHTIG: Für die Anzeige/Explorer muss das Byte-Array umgedreht werden
         result.reverse();

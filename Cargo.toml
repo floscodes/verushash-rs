@@ -10,7 +10,6 @@ hex = "0.4.3"
 cc = "1.2.54"
 
 [profile.release]
-# Zusätzliche Mining-Performance:
 opt-level = 3
 lto = true          # Link Time Optimization für maximale Geschwindigkeit
 codegen-units = 1   # Langsameres Kompilieren, aber schnellerer Code
