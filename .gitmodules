@@ -1,0 +1,3 @@
+[submodule "crypto"]
+	path = crypto
+	url = https://github.com/VerusCoin/verushash-node.git

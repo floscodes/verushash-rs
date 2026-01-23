@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-aes = "0.8.4"
 hex = "0.4.3"
-hex-literal = "1.1.0"
+
+[profile.release]
+# Zusätzliche Mining-Performance:
+opt-level = 3
+lto = true          # Link Time Optimization für maximale Geschwindigkeit
+codegen-units = 1   # Langsameres Kompilieren, aber schnellerer Code
+panic = "abort"     # Spart Binärgröße und etwas Performance
