@@ -1,4 +1,20 @@
-pub fn verus_hash(data: &[u8]) -> [u8; 32] {}
+mod verus;
+
+pub fn verus_hash(data: &[u8]) -> [u8; 32] {
+    let mut out = [0u8; 32];
+    unsafe {
+        verus::verus_hash(out.as_mut_ptr(), data.as_ptr(), data.len());
+    }
+    out
+}
+
+pub fn verus_hash_v2(data: &[u8]) -> [u8; 32] {
+    let mut out = [0u8; 32];
+    unsafe {
+        verus::verus_hash_v2(out.as_mut_ptr(), data.as_ptr(), data.len());
+    }
+    out
+}
 
 #[cfg(test)]
 mod tests {

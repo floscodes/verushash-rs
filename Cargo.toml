@@ -6,6 +6,9 @@ edition = "2024"
 [dependencies]
 hex = "0.4.3"
 
+[build-dependencies]
+cc = "1.2.54"
+
 [profile.release]
 # Zusätzliche Mining-Performance:
 opt-level = 3
