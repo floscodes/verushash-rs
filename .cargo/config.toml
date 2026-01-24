@@ -1,4 +1,0 @@
-[build]
-# Gilt für alle Builds in diesem Projekt
-rustflags = ["-C", "target-cpu=native"]
-
