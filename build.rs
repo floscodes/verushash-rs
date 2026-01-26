@@ -33,13 +33,16 @@ fn main() {
         ]);
 
     if target_arch == "x86_64" {
-        build_cpp.flag("-maes").flag("-msse4.1").flag("-mpclmul");
+        build_cpp
+            .flag("-maes")
+            .flag("-msse4.1")
+            .flag("-mpclmul")
+            .flag("-mstackrealign");
     } else if target_arch == "aarch64" {
         build_cpp.flag("-march=armv8-a+crypto");
     }
 
     build_cpp.compile("verushash");
 
-    // Rust mitteilen, dass wir gegen C++ linken müssen (besonders auf macOS wichtig)
     println!("cargo:rustc-link-lib=c++");
 }
