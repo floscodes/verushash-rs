@@ -1,28 +1,45 @@
 fn main() {
-    //let target_arch = std::env::var("CARGO_CFG_TARGET_ARCH").unwrap();
-    let mut build = cc::Build::new();
+    let target_arch = std::env::var("CARGO_CFG_TARGET_ARCH").unwrap();
 
-    //if target_arch == "x86_64" {
-    build
+    // 1. C-Dateien kompilieren (Haraka)
+    let mut build_c = cc::Build::new();
+    build_c
+        .flag("-fno-lto")
+        .include("native/crypto")
+        .files(["native/crypto/haraka.c", "native/crypto/haraka_portable.c"]);
+
+    // Architekturspezifische Flags für C-Teil
+    if target_arch == "x86_64" {
+        build_c.flag("-maes").flag("-msse4.1").flag("-mpclmul");
+    } else if target_arch == "aarch64" {
+        build_c.flag("-march=armv8-a+crypto");
+    }
+    build_c.compile("haraka");
+
+    // 2. C++-Dateien kompilieren (VerusCore & Wrapper)
+    let mut build_cpp = cc::Build::new();
+    build_cpp
         .cpp(true)
         .flag_if_supported("-std=c++17")
         .flag("-fno-lto")
         .flag("-mmacosx-version-min=15.5")
-        .flag_if_supported("-maes")
-        .flag_if_supported("-msse4.1")
-        .flag_if_supported("-mpclmul")
         .include("native/crypto")
+        .include("/opt/homebrew/include")
         .files([
             "native/crypto/verus_hash.cpp",
             "native/crypto/verus_clhash.cpp",
             "native/crypto/verus_clhash_portable.cpp",
-            "native/crypto/haraka.c",
-            "native/crypto/haraka_portable.c",
             "native/verushash.cc",
         ]);
-    //} else {
-    //panic!("Unsupported architecture: {}", target_arch);
-    //}
-    println!("cargo:rustc-link-lib=System");
-    build.compile("verushash");
+
+    if target_arch == "x86_64" {
+        build_cpp.flag("-maes").flag("-msse4.1").flag("-mpclmul");
+    } else if target_arch == "aarch64" {
+        build_cpp.flag("-march=armv8-a+crypto");
+    }
+
+    build_cpp.compile("verushash");
+
+    // Rust mitteilen, dass wir gegen C++ linken müssen (besonders auf macOS wichtig)
+    println!("cargo:rustc-link-lib=c++");
 }
