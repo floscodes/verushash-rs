@@ -1,21 +1,9 @@
-mod verus;
-
-pub fn verus_hash_init() {
-    unsafe {
-        verus::verus_hash_init();
-    }
-}
-
-pub fn verus_hash_v2_init() {
-    unsafe {
-        verus::verus_hash_v2_init();
-    }
-}
+mod verushash;
 
 pub fn verus_hash(data: &[u8]) -> [u8; 32] {
     let mut out = [0u8; 32];
     unsafe {
-        verus::verus_hash(out.as_mut_ptr(), data.as_ptr(), data.len());
+        verushash::verus_v1_hash(out.as_mut_ptr(), data.as_ptr(), data.len());
     }
     out
 }
@@ -23,7 +11,23 @@ pub fn verus_hash(data: &[u8]) -> [u8; 32] {
 pub fn verus_hash_v2(data: &[u8]) -> [u8; 32] {
     let mut out = [0u8; 32];
     unsafe {
-        verus::verus_hash_v2(out.as_mut_ptr(), data.as_ptr(), data.len());
+        verushash::verus_v2_hash(out.as_mut_ptr(), data.as_ptr(), data.len());
+    }
+    out
+}
+
+pub fn verus_hash_v2_1(data: &[u8]) -> [u8; 32] {
+    let mut out = [0u8; 32];
+    unsafe {
+        verushash::verus_v2_1_hash(out.as_mut_ptr(), data.as_ptr(), data.len());
+    }
+    out
+}
+
+pub fn verus_hash_v2_2(data: &[u8]) -> [u8; 32] {
+    let mut out = [0u8; 32];
+    unsafe {
+        verushash::verus_v2_2_hash(out.as_mut_ptr(), data.as_ptr(), data.len());
     }
     out
 }
@@ -31,11 +35,10 @@ pub fn verus_hash_v2(data: &[u8]) -> [u8; 32] {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use hex_literal::hex;
 
     #[test]
     fn test_hashes() {
-        verus_hash_init();
-        verus_hash_v2_init();
         let data = b"hello world";
         let h1 = verus_hash(data);
         let h2 = verus_hash_v2(data);
@@ -43,31 +46,38 @@ mod tests {
     }
 
     #[test]
-    fn test_verus_block_3911208() {
-        verus_hash_v2_init();
-        let header_hex = concat!(
-            "04000100", // Version (Little-Endian)
-            "ab7bf1dc7f25aae6fe440ee23a63d3b9fd21bc52ff66a1a30865c4d81f415585", // PrevHash (umgedreht)
-            "2bf83fbefa8e542622f6a34261d231efbb69c6dc7658698898ed8d57269a5c8b", // MerkleRoot (umgedreht)
-            "89b2b9ca4421153d45baf99f7a9d565b32679ae14361546da394b5e583fea72c", // FinalSaplingRoot (umgedreht)
-            "f581d269",                                                         // Time: 1769165301
-            "0562021b",                                                         // Bits: 1b026205
-            "a517ed768aa6922644c776243346b78eb7ece943fa56f57ac3814222c2f40000"  // Nonce (umgedreht)
-        );
+    fn test_verus_hash_full_block_without_solution() {
+        // Header-Felder aus dem Block
+        let version: u32 = 65540;
+        let prev_block = hex!("bcafa421237a33e46ac2cb939005b6e359dfe121a7d463c584196911d37b43d9");
+        let merkle_root = hex!("141b9ecdb6d4d4914863ecd156a674f46d967fb1b7373300f897aed3a8f9ca5d");
+        let time: u32 = 1769350479;
+        let bits = hex!("1b051ad1");
+        let nonce = hex!("00001879e030148abae4636109cb6c2350e99c32612dca38e3026c52cd1c3a36");
+        let solution = hex!("0700000000010400df9a51597e31d795ebc5b36449cb6badd92ba681ffb1ece444c4329fa0cf390261014cd99d9dc8564a7aed749a20c51e866c700c857437391784cec1dc6625581af5b8015c64d39ab44c60ead8317f9f5a9b6c4c9921b9353ba92bb170eb868fb3b46389b1513b3432e5b3ed11cccefd040b14300100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600085100000000606767bf84f6b01");
+        let segid: i32 = -2;
+        let final_sapling_root =
+            hex!("1de12cea4768068f781817ecf9c4c60d82394e58f7fffce530be6c14bf4d0a42");
 
-        let header_bytes = hex::decode(header_hex).unwrap();
+        // Serialisiere den Header wie Verus-Core (ohne Solution)
+        let mut header_bytes = vec![];
+        header_bytes.extend(&version.to_le_bytes());
+        header_bytes.extend(&prev_block);
+        header_bytes.extend(&merkle_root);
+        header_bytes.extend(&time.to_le_bytes());
+        header_bytes.extend(&bits);
+        header_bytes.extend(&nonce);
+        header_bytes.extend(&solution);
+        header_bytes.extend(&segid.to_le_bytes());
+        header_bytes.extend(&final_sapling_root);
 
-        // Das ist der "hash" aus deinem JSON (Ziel-Ergebnis)
-        let expected_hash_hex = "0000000000005f1a85389d4671aae324ab32757dc1b537160e74c015a3571599";
+        // Verus Hash über den Header
+        let hash_result = verus_hash_v2_2(&header_bytes);
 
-        // Berechnung
-        let mut result = verus_hash_v2(&header_bytes);
+        // Erwarteter Blockhash
+        let expected_hash =
+            hex!("000000000003212dc93830bbf1fcdf92bcdc0ac3e859dd5b0db454ebd9b18d50");
 
-        // WICHTIG: Für die Anzeige/Explorer muss das Byte-Array umgedreht werden
-        result.reverse();
-
-        let result_hex = hex::encode(result);
-
-        assert_eq!(result_hex, expected_hash_hex);
+        assert_eq!(hash_result, expected_hash);
     }
 }
