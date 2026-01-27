@@ -1,14 +1,13 @@
 fn main() {
     let target_arch = std::env::var("CARGO_CFG_TARGET_ARCH").unwrap();
+    let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
 
-    // 1. C-Dateien kompilieren (Haraka)
     let mut build_c = cc::Build::new();
     build_c
         .flag("-fno-lto")
         .include("native/crypto")
         .files(["native/crypto/haraka.c", "native/crypto/haraka_portable.c"]);
 
-    // Architekturspezifische Flags für C-Teil
     if target_arch == "x86_64" {
         build_c.flag("-maes").flag("-msse4.1").flag("-mpclmul");
     } else if target_arch == "aarch64" {
@@ -16,15 +15,14 @@ fn main() {
     }
     build_c.compile("haraka");
 
-    // 2. C++-Dateien kompilieren (VerusCore & Wrapper)
     let mut build_cpp = cc::Build::new();
     build_cpp
         .cpp(true)
         .flag_if_supported("-std=c++17")
         .flag("-fno-lto")
-        .flag("-mmacosx-version-min=15.5")
+        //.flag("-mmacosx-version-min=15.5")
         .include("native/crypto")
-        .include("/opt/homebrew/include")
+        //.include("/opt/homebrew/include")
         .files([
             "native/crypto/verus_hash.cpp",
             "native/crypto/verus_clhash.cpp",
@@ -36,13 +34,30 @@ fn main() {
         build_cpp
             .flag("-maes")
             .flag("-msse4.1")
-            .flag("-mpclmul")
-            .flag("-mstackrealign");
+            .flag("-mpclmul");
     } else if target_arch == "aarch64" {
         build_cpp.flag("-march=armv8-a+crypto");
     }
 
+    if target_os == "macos" {
+        build_cpp
+            .include("/opt/homebrew/include")
+            .flag("-mmacosx-version-min=15.5");
+    }
+
+    if target_os == "windows" {
+        build_c.flag("-mstackrealign");
+        build_cpp.flag("-mstackrealign");
+        println!("cargo:rustc-link-arg=-Wl,--stack,16777216");
+    }
+
     build_cpp.compile("verushash");
 
-    println!("cargo:rustc-link-lib=c++");
+    println!("cargo:rustc-link-lib=static=verushash");
+    println!("cargo:rustc-link-lib=static=haraka");
+    if target_os == "macos" {
+        println!("cargo:rustc-link-lib=c++");
+    } else {
+        println!("cargo:rustc-link-lib=stdc++");
+    }
 }
