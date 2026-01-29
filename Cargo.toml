@@ -1,6 +1,8 @@
 [package]
 name = "verushash-rs"
 version = "0.1.0"
+authors = ["flopetautschnig (floscodes) <mail@floscodes.net>"]
+description = "Rust bindings for the VerusHash algorithm, providing easy access to Verus hashing functions from Rust."
 edition = "2024"
 
 [dependencies]
