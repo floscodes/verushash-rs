@@ -3,7 +3,29 @@ name = "verushash-rs"
 version = "0.1.0"
 authors = ["flopetautschnig (floscodes) <mail@floscodes.net>"]
 description = "Rust bindings for the VerusHash algorithm, providing easy access to Verus hashing functions from Rust."
+repository = "https://github.com/floscodes/verushash-rs"
+homepage = "https://github.com/floscodes/verushash-rs"
+documentation = "https://docs.rs/verushash-rs"
+readme = "README.md"
+keywords = [
+    "verushash",
+    "verus",
+    "pow",
+    "blockchain",
+    "hashing",
+    "crypto",
+    "cryptography",
+    "mining",
+    "ffi",
+    "rust"
+]
+categories = [
+    "cryptography",
+    "algorithm",
+    "network-programming"
+]
 edition = "2024"
+
 
 [dependencies]
 hex = "0.4.3"
