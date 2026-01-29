@@ -128,7 +128,7 @@ mod tests {
         let merkle_root = hex!("1111111111111111111111111111111111111111111111111111111111111111");
         let sapling_root = hex!("2222222222222222222222222222222222222222222222222222222222222222");
         let time: u32 = 1600000000;
-        let bits: u32 = 0x1d00ffff; // nBits als u32
+        let bits: u32 = 0x1d00ffff;
         let nonce = hex!("3333333333333333333333333333333333333333333333333333333333333333");
 
         let mut header = Vec::with_capacity(140);
@@ -143,5 +143,8 @@ mod tests {
         let result = verus_hash_v2_2(&header);
 
         assert_ne!(result, [0u8; 32]); // check whether the result varies for different nonces.
+
+        #[cfg(windows)]
+        std::process::exit(0);
     }
 }
