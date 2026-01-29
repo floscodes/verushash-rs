@@ -15,10 +15,12 @@ fn main() {
         build_c.flag("-march=armv8-a+crypto");
     }
     if target_os == "windows" && target_env == "gnu" {
-        build_c.flag("-mstackrealign").flag("-mincoming-stack-boundary=4");
+        build_c
+            .flag("-mstackrealign")
+            .flag("-mincoming-stack-boundary=4");
     }
 
-     build_c.compile("haraka");
+    build_c.compile("haraka");
 
     let mut build_cpp = cc::Build::new();
     build_cpp
@@ -34,10 +36,7 @@ fn main() {
         ]);
 
     if target_arch == "x86_64" {
-        build_cpp
-            .flag("-maes")
-            .flag("-msse4.1")
-            .flag("-mpclmul");
+        build_cpp.flag("-maes").flag("-msse4.1").flag("-mpclmul");
     } else if target_arch == "aarch64" {
         build_cpp.flag("-march=armv8-a+crypto");
     }
@@ -49,7 +48,9 @@ fn main() {
     }
 
     if target_os == "windows" && target_env == "gnu" {
-        build_cpp.flag("-mstackrealign").flag("-mincoming-stack-boundary=4");
+        build_cpp
+            .flag("-mstackrealign")
+            .flag("-mincoming-stack-boundary=4");
         println!("cargo:rustc-link-arg=-Wl,--stack,16777216");
     }
 

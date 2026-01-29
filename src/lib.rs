@@ -40,18 +40,93 @@ mod tests {
     #[test]
     fn test_verus_hash_v1() {
         let data = b"hello world";
-        let _h1 = verus_hash_v1(data);
+        let h = verus_hash_v1(data);
+        println!("h: {}", hex::encode(h));
+
+        #[cfg(windows)]
+        std::process::exit(0);
+    }
+
+    #[test]
+    fn test_verus_hash_v2() {
+        let data = b"hello world";
+        let h = verus_hash_v2(data);
+        println!("h: {}", hex::encode(h));
+
+        #[cfg(windows)]
+        std::process::exit(0);
+    }
+
+    #[test]
+    fn test_verus_hash_v2_3x() {
+        for _ in 0..3 {
+            let data = b"hello world";
+            let h = verus_hash_v2(data);
+            println!("h: {}", hex::encode(h));
+        }
+    }
+
+    #[test]
+    fn test_verus_hash_v2_1() {
+        let data = b"hello world";
+        let h = verus_hash_v2_2(data);
+        println!("h: {}", hex::encode(h));
+
+        #[cfg(windows)]
+        std::process::exit(0);
+    }
+
+    #[test]
+    fn test_verus_hash_v2_1_3x() {
+        for _ in 0..3 {
+            let data = b"hello world";
+            let h = verus_hash_v2_2(data);
+            println!("h: {}", hex::encode(h));
+        }
+
+        #[cfg(windows)]
+        std::process::exit(0);
+    }
+
+    #[test]
+    fn test_verus_hash_v2_2() {
+        let data = b"hello world";
+        let h = verus_hash_v2_2(data);
+        println!("h: {}", hex::encode(h));
+
+        #[cfg(windows)]
+        std::process::exit(0);
+    }
+
+    #[test]
+    fn test_verus_hash_v2_2_3x() {
+        for _ in 0..3 {
+            let data = b"hello world";
+            let h = verus_hash_v2_2(data);
+            println!("h: {}", hex::encode(h));
+        }
+        #[cfg(windows)]
+        std::process::exit(0);
+    }
+
+    #[test]
+    fn test_verus_hash_v2_2_1000x() {
+        for _ in 0..1000 {
+            let data = b"hello world";
+            let h = verus_hash_v2_2(data);
+            println!("h: {}", hex::encode(h));
+        }
+
+        #[cfg(windows)]
+        std::process::exit(0);
     }
 
     #[test]
     fn test_verus_hash_v2_2_standard() {
         let version: u32 = 4;
-        let prev_block =
-            hex!("0000000000000000000000000000000000000000000000000000000000000000");
-        let merkle_root =
-            hex!("1111111111111111111111111111111111111111111111111111111111111111");
-        let sapling_root =
-            hex!("2222222222222222222222222222222222222222222222222222222222222222");
+        let prev_block = hex!("0000000000000000000000000000000000000000000000000000000000000000");
+        let merkle_root = hex!("1111111111111111111111111111111111111111111111111111111111111111");
+        let sapling_root = hex!("2222222222222222222222222222222222222222222222222222222222222222");
         let time: u32 = 1600000000;
         let bits: u32 = 0x1d00ffff; // nBits als u32
         let nonce = hex!("3333333333333333333333333333333333333333333333333333333333333333");
