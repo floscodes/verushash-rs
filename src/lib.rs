@@ -1,3 +1,7 @@
+// (C) 2026 flopetautschnig (floscodes)
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 mod verushash;
 
 pub fn verus_hash_v1(data: &[u8]) -> [u8; 32] {
