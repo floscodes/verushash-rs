@@ -14,7 +14,6 @@ fn main() {
         build_c.flag("-march=armv8-a+crypto");
     }
 
-
     build_c.compile("haraka");
 
     let mut build_cpp = cc::Build::new();
