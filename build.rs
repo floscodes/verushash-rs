@@ -1,7 +1,6 @@
 fn main() {
     let target_arch = std::env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap_or_default();
-    let target_env = std::env::var("CARGO_CFG_TARGET_ENV").unwrap_or_default();
 
     let mut build_c = cc::Build::new();
     build_c
@@ -14,11 +13,7 @@ fn main() {
     } else if target_arch == "aarch64" {
         build_c.flag("-march=armv8-a+crypto");
     }
-    if target_os == "windows" && target_env == "gnu" {
-        build_c
-            .flag("-mstackrealign")
-            .flag("-mincoming-stack-boundary=4");
-    }
+
 
     build_c.compile("haraka");
 
@@ -45,13 +40,6 @@ fn main() {
         build_cpp
             .include("/opt/homebrew/include")
             .flag("-mmacosx-version-min=15.5");
-    }
-
-    if target_os == "windows" && target_env == "gnu" {
-        build_cpp
-            .flag("-mstackrealign")
-            .flag("-mincoming-stack-boundary=4");
-        println!("cargo:rustc-link-arg=-Wl,--stack,16777216");
     }
 
     build_cpp.compile("verushash");

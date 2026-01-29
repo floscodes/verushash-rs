@@ -1,5 +1,5 @@
 [package]
-name = "vmine"
+name = "verushash"
 version = "0.1.0"
 edition = "2024"
 
@@ -12,6 +12,6 @@ cc = "1.2.54"
 
 [profile.release]
 opt-level = 3
-lto = true          # Link Time Optimization für maximale Geschwindigkeit
-codegen-units = 1   # Langsameres Kompilieren, aber schnellerer Code
-panic = "abort"     # Spart Binärgröße und etwas Performance
+lto = true
+codegen-units = 1   
+panic = "abort"     
