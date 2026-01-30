@@ -39,6 +39,7 @@ pub fn verus_hash_v2_2(data: &[u8]) -> [u8; 32] {
 #[cfg(test)]
 mod tests {
     use super::*;
+    
 
     #[test]
     fn test_verus_hash_v1() {
@@ -173,4 +174,46 @@ mod tests {
         #[cfg(windows)]
         std::process::exit(0);
     }
+
+fn hex_to_le32(hex_str: &str) -> [u8; 32] {
+    let bytes = hex::decode(hex_str).unwrap();
+    assert_eq!(bytes.len(), 32);
+    let mut arr = [0u8; 32];
+    arr.copy_from_slice(&bytes);
+    arr
+}
+
+#[test]
+fn test_build_verus_header_dummy()  {
+    let version = 65540u32.to_le_bytes(); // 4 Bytes LE
+    let prevhash = hex_to_le32("97c8dcfb6805365f196aae2b64762c217dcde9dcf03b3d9580708956b303491b");
+    let merkleroot = hex_to_le32("b9a50cf232c2e0af578f08260abf311efbd520fe95eba0f12c6b901a4e041da3");
+    let reserved = [0u8; 32];
+    let time = 1767916632u32.to_le_bytes(); // 4 Bytes LE
+    let bits_hex = "1b028f33"; // Verus: oft als LE interpretiert
+    let bits_bytes = hex::decode(bits_hex).unwrap();
+    let mut bits = [0u8; 4];
+    bits.copy_from_slice(&bits_bytes); // LE
+    let nonce_hex = "086690fdb44d689745ae5754a4293ce546f3fe4ba8ab113bb9b71f591a138bfe";
+    let nonce = hex_to_le32(nonce_hex);
+
+    // Header zusammenbauen (Standard Verus: 1487 Bytes für Hash)
+    let mut header = Vec::new();
+    header.extend_from_slice(&version);      // 0-3
+    header.extend_from_slice(&prevhash);     // 4-35
+    header.extend_from_slice(&merkleroot);   // 36-67
+    header.extend_from_slice(&reserved);     // 68-99
+    header.extend_from_slice(&time);         // 100-103
+    header.extend_from_slice(&bits);         // 104-107
+    header.extend_from_slice(&nonce);        // 108-139
+    // Solution: 1347 Bytes (140-1486)
+    // Für Stake/Minted: Oft fd 40 05 00 + PoS-Daten oder aus "solution" Feld decodieren
+    // Hier Platzhalter: fd400500 + Nulls + Teile aus solution (vereinfacht)
+    let mut solution = vec![0xfd, 0x40, 0x05, 0x00];
+    solution.resize(1347, 0u8); // Padding mit 0
+    header.extend_from_slice(&solution);
+
+    assert_eq!(header.len(), 1487);
+}
+
 }
