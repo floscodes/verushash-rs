@@ -1,4 +1,4 @@
-# VerusHash Rust Wrapper
+# verushash-rs
 
 A Rust implementation and wrapper for the **VerusHash** algorithm, providing native bindings to the cryptographic hashing functions used by the VerusCoin blockchain.[web:2]  
 This crate is based on the official [`verushash-node`](https://github.com/VerusCoin/verushash-node) implementation and offers idiomatic Rust access to all major VerusHash versions.[web:2]
