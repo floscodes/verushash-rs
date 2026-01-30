@@ -9,16 +9,11 @@ documentation = "https://docs.rs/verushash-rs"
 readme = "README.md"
 license = "MIT"
 keywords = [
-    "verushash",
-    "verus",
     "pow",
     "blockchain",
     "hashing",
     "crypto",
-    "cryptography",
-    "mining",
     "ffi",
-    "rust"
 ]
 categories = [
     "cryptography",
