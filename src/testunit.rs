@@ -13,15 +13,12 @@ const TEST_DATA: &[u8] = b"hello world";
         
         let h = verus_hash_v1(TEST_DATA);
         let h_display = hex::encode(h);
-        println!("h: {}", h_display);
 
         assert_eq!(
             "071cf6db1bf047ee07e0fcc3f5a9c77d2580798ae19e3c4ef242e14a78378f40",
             h_display
         );
 
-        #[cfg(windows)]
-        std::process::exit(0);
     }
 
     #[test]
@@ -30,7 +27,6 @@ const TEST_DATA: &[u8] = b"hello world";
         
         let h = verus_hash_v2(TEST_DATA);
         let h_display = hex::encode(h);
-        println!("h: {}", h_display);
 
         assert_eq!(
             "5bc0ba7e97fe14d19f527a803577dadeae3ea45b15a68b050ee308d581e096b1",
@@ -46,7 +42,6 @@ const TEST_DATA: &[u8] = b"hello world";
             
             let h = verus_hash_v2(TEST_DATA);
             let h_display = hex::encode(h);
-            println!("h: {}", h_display);
 
             assert_eq!(
                 "5bc0ba7e97fe14d19f527a803577dadeae3ea45b15a68b050ee308d581e096b1",
@@ -62,7 +57,6 @@ const TEST_DATA: &[u8] = b"hello world";
         
         let h = verus_hash_v2_1(TEST_DATA);
         let h_display = hex::encode(h);
-        println!("h: {}", h_display);
 
         assert_eq!(
             "6cae82cbef9b80afe08e2ceab0073f5db66b3f2f9c3ebca9e8f4e36f7cef4baf",
@@ -78,7 +72,6 @@ const TEST_DATA: &[u8] = b"hello world";
             
             let h = verus_hash_v2_1(TEST_DATA);
             let h_display = hex::encode(h);
-            println!("h: {}", h_display);
 
             assert_eq!(
                 "6cae82cbef9b80afe08e2ceab0073f5db66b3f2f9c3ebca9e8f4e36f7cef4baf",
@@ -94,7 +87,6 @@ const TEST_DATA: &[u8] = b"hello world";
         
         let h = verus_hash_v2_2(TEST_DATA);
         let h_display = hex::encode(h);
-        println!("h: {}", h_display);
 
         assert_eq!(
             "6cae82cbef9b80afe08e2ceab0073f5db66b3f2f9c3ebca9e8f4e36f7cef4baf",
@@ -110,7 +102,6 @@ const TEST_DATA: &[u8] = b"hello world";
             
             let h = verus_hash_v2_2(TEST_DATA);
             let h_display = hex::encode(h);
-            println!("h: {}", h_display);
 
             assert_eq!(
                 "6cae82cbef9b80afe08e2ceab0073f5db66b3f2f9c3ebca9e8f4e36f7cef4baf",
@@ -127,7 +118,6 @@ const TEST_DATA: &[u8] = b"hello world";
             
             let h = verus_hash_v2_2(TEST_DATA);
             let h_display = hex::encode(h);
-            println!("h: {}", h_display);
 
             assert_eq!(
                 "6cae82cbef9b80afe08e2ceab0073f5db66b3f2f9c3ebca9e8f4e36f7cef4baf",
